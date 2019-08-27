@@ -202,11 +202,6 @@ class scatter:
         M = np.dot(self.R_1(omega), np.dot(self.R_2(mu), self.R_3(nu)))
         return M
 
-    def initialize(self):
-        self.cal_B_matrix()
-        self.cal_U_matrix()
-        return
-
     def cal_B_matrix(self):
         '''
             Calculate the B matrix,
@@ -288,6 +283,11 @@ class scatter:
         Q = self.angles2Q(angles[0], angles[1], angles[2])
         R = self.R(rotations[0], rotations[1], rotations[2])
 
-        hkl = np.dot(self.UB_matrix_inv, np.dot(np.linalg.inv(R), Q))
+        hkl = np.dot(self.UB_matrix_inv, np.dot(np.transpose(R), Q))
 
         return hkl
+
+    def hkl2Q(self, hkl, rotations):
+        R = self.R(rotations[0], rotations[1], rotations[2])
+        Q = np.dot(R, np.dot(self.UB_matrix, hkl))
+        return Q
